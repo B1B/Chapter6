@@ -7,6 +7,15 @@
   </ion-nav-buttons>
   <ion-content>
     <ion-scroll direction="y" paging="true" ng-style="{width: getWidth(), height: getHeight()}">
+      <!-- ion-refresher: http://ionicframework.com/docs/api/directive/ionRefresher/ 
+          Allows you to add pull-to-refresh to a scrollView.
+          Place it as the first child of your ionContent or ionScroll element.
+      -->
+      <ion-refresher
+        pulling-text="Obtaining weather"
+        on-refresh="doRefresh()">
+        
+      </ion-refresher>
       <div ng-style="{height: getTotalHeight()}">
         <div class="scroll-page center" ng-style="{width: getWidth(), height: getHeight()}">
           <div class="bar bar-dark">

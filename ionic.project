@@ -1,6 +1,6 @@
 {
   "name": "chapter6",
-  "app_id": "",
+  "app_id": "a3fd2657",
   "proxies": [
     {
       "path": "/api/forecast",

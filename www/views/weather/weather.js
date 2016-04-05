@@ -1,11 +1,31 @@
 angular.module('App')
-.controller('WeatherController', function ($scope, $http, $stateParams, $ionicActionSheet, $ionicModal, Locations, Settings) {
+.controller('WeatherController', function ($scope, $http, $ionicLoading, $stateParams, $ionicActionSheet, $ionicModal, Locations, Settings) {
   $scope.params = $stateParams;
   $scope.settings = Settings;
-
-  $http.get('/api/forecast/' + $stateParams.lat + ',' + $stateParams.lng, {params: {units: Settings.units}}).success(function (forecast) {
-    $scope.forecast = forecast;
-  });
+  
+  //in order to allow ionicRefresher to work, we need this service call to be placed within a method
+  //also, we are asked to utilize an $ionicLoading when calling the weather: http://ionicframework.com/docs/api/service/$ionicLoading/
+  $scope.getWeather = function(){
+    $http.get('/api/forecast/' + $stateParams.lat + ',' + $stateParams.lng, {params: {units: Settings.units}}).success(function (forecast) {
+      $scope.forecast = forecast;
+      $ionicLoading.hide();
+    })
+    .error(function(err){
+      $ionicLoading.show({
+        template: 'Could not load weather. Please try again later.',
+        duration: 3000
+      });
+    })
+    .finally(function() {
+       // Stop the ion-refresher from spinning
+       $scope.$broadcast('scroll.refreshComplete');
+     });;
+  };
+  
+  //used to show activity is occurring
+  $ionicLoading.show();
+  //call get weather
+  $scope.getWeather();
 
   var barHeight = document.getElementsByTagName('ion-header-bar')[0].clientHeight;
   $scope.getWidth = function () {
